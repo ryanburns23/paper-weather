@@ -1,0 +1,259 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-item/paper-icon-item.html">
+<link rel="import" href="../paper-item/paper-item-body.html">
+<link rel="import" href="weather-icons.html">
+
+<!--
+`paper-weather`
+
+
+@demo demo/index.html
+-->
+
+<dom-module id="paper-weather">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      [hidden]{
+        display: none;
+      }
+      paper-icon-item{
+        --paper-item-icon-width: 35px;
+        --paper-item-focused-before: { display: none; }
+      }
+      .high{
+        color: red;
+        margin-left: 3px;
+      }
+      .low{
+        color: blue;
+        margin-right: 3px;
+      }
+
+    </style>
+
+    <iron-ajax
+      auto
+      url="https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D'[[location]]')&format=json"
+      handle-as="json"
+      loading="{{loading}}"
+      last-response="{{weather}}">
+    </iron-ajax>
+
+    <span hidden$="[[!loading]]">Loading Weather...</span>
+
+    <div hidden$="[[loading]]" class="weather">
+      <label>[[lastResponse.item.title]]</label>
+      <paper-icon-item>
+        <iron-icon item-icon icon="weather:[[_getIcon(lastResponse.item.condition.code)]]"></iron-icon>
+        <paper-item-body two-line>
+          <div>[[lastResponse.item.condition.temp]]°</div>
+          <div secondary>[[lastResponse.item.condition.text]]</div>
+        </paper-item-body>
+      </paper-icon-item>
+      <div hidden="[[hideForecast]]">
+        <label>10 Day Forecast</label>
+        <template is="dom-repeat" items="[[lastResponse.item.forecast]]">
+          <paper-icon-item>
+            <iron-icon item-icon icon="weather:[[_getIcon(item.code)]]"></iron-icon>
+            <paper-item-body two-line>
+              <div><span class="low">[[item.low]]°</span>|<span class="high">[[item.high]]°</span>  [[item.text]]</div>
+              <div secondary>[[item.day]] - [[item.date]]</div>
+            </paper-item-body>
+          </paper-icon-item>
+        </template>
+      </div>
+    </div>
+
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'paper-weather',
+      properties: {
+        lastResponse: {
+          type: Object,
+          notify: true,
+          computed: "computeResponse(weather)",
+        },
+        location: {
+          type: String,
+        },
+        hideForecast: {
+          type: Boolean,
+          value: false,
+        },
+        loading: {
+          type: Boolean,
+          notify: true,
+        },
+      },
+
+      computeResponse: function(response) {
+        console.log(response.query.results.channel);
+        return response.query.results.channel;
+      },
+
+      _getIcon: function(code){
+        var code = parseInt(code);
+        switch (code) {
+          case 0:
+            return "tornado";
+            break;
+          case 1:
+            return "day-storm-showers";
+            break;
+          case 2:
+            return "hurricane";
+            break;
+          case 3:
+            return "thunderstorm";
+            break;
+          case 4:
+            return "thunderstorm";
+            break;
+          case 5:
+            return "rain-mix";
+            break;
+          case 6:
+            return "rain-mix";
+            break;
+          case 7:
+            return "rain-mix";
+            break;
+          case 8:
+            return "hail";
+            break;
+          case 9:
+            return "showers";
+            break;
+          case 10:
+            return "hail";
+            break;
+          case 11:
+            return "showers";
+            break;
+          case 12:
+            return "showers";
+            break;
+          case 13:
+            return "snow";
+            break;
+          case 14:
+            return "day-snowx";
+            break;
+          case 15:
+            return "snow-wind";
+            break;
+          case 16:
+            return "snow";
+            break;
+          case 17:
+            return "hail";
+            break;
+          case 18:
+            return "rain-mix";
+            break;
+          case 19:
+            return "dust";
+            break;
+          case 20:
+            return "fog";
+            break;
+          case 21:
+            return "windy";
+            break;
+          case 22:
+            return "smoke";
+            break;
+          case 23:
+            return "strong-wind";
+            break;
+          case 24:
+            return "strong-wind";
+            break;
+          case 25:
+            return "snowflake-cold";
+            break;
+          case 26:
+            return "cloudy";
+            break;
+          case 27:
+            return "night-cloudy";
+            break;
+          case 28:
+            return "day-cloudy";
+            break;
+          case 29:
+            return "night-cloudy";
+            break;
+          case 30:
+            return "day-cloudy";
+            break;
+          case 31:
+            return "night-clear";
+            break;
+          case 32:
+            return "day-sunny";
+            break;
+          case 33:
+            return "night-partly-cloudy";
+            break;
+          case 34:
+            return "day-sunny-overcast";
+            break;
+          case 35:
+            return "rain-mix";
+            break;
+          case 36:
+            return "hot";
+            break;
+          case 37:
+            return "day-storm-showers";
+            break;
+          case 38:
+            return "day-storm-showers";
+            break;
+          case 39:
+            return "day-storm-showers";
+            break;
+          case 40:
+            return "showers";
+            break;
+          case 41:
+            return "snow-wind";
+            break;
+          case 42:
+            return "snow";
+            break;
+          case 43:
+            return "snow-wind";
+            break;
+          case 44:
+            return "day-sunny-overcast";
+            break;
+          case 45:
+            return "day-storm-showers";
+            break;
+          case 46:
+            return "snow";
+            break;
+          case 47:
+            return "day-storm-showers";
+            break;
+          case 3200:
+            return "stars";
+            break;
+          default:
+            console.log("error");
+        }
+      },
+
+    });
+  </script>
+</dom-module>
