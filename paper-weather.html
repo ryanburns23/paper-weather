@@ -8,10 +8,9 @@
 <!--
 `paper-weather`
 
- Displays a 10 days forecast from <a href="https://developer.yahoo.com/weather/">Yahoo Weather API</a>
+ Displays a 10 days forecast from <a href="https://developer.yahoo.com/weather/">Yahoo Weather API</a> <br>
  Weather icons from <a href="https://github.com/erikflowers/weather-icons">erikflowers/weather-icons</a>
 
-@demo demo/index.html
 -->
 
 <dom-module id="paper-weather">
@@ -75,7 +74,7 @@
       is: 'paper-weather',
       properties: {
         /**
-         * Last response from yahoo weather
+         * Last response
          */
         lastResponse: {
           type: Object,
@@ -96,7 +95,7 @@
           value: false,
         },
         /**
-         * True if loading query from yahoo
+         * True if loading
          */
         loading: {
           type: Boolean,
