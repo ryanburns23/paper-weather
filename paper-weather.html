@@ -8,6 +8,8 @@
 <!--
 `paper-weather`
 
+ Displays a 10 days forecast from <a href="https://developer.yahoo.com/weather/">Yahoo Weather API</a>
+ Weather icons from <a href="https://github.com/erikflowers/weather-icons">erikflowers/weather-icons</a>
 
 @demo demo/index.html
 -->
@@ -44,7 +46,6 @@
     </iron-ajax>
 
     <span hidden$="[[!loading]]">Loading Weather...</span>
-
     <div hidden$="[[loading]]" class="weather">
       <label>[[lastResponse.item.title]]</label>
       <paper-icon-item>
@@ -67,35 +68,47 @@
         </template>
       </div>
     </div>
-
-
   </template>
 
   <script>
     Polymer({
       is: 'paper-weather',
       properties: {
+        /**
+         * Last response from yahoo weather
+         */
         lastResponse: {
           type: Object,
           notify: true,
-          computed: "computeResponse(weather)",
+          computed: "_computeResponse(weather)",
         },
+        /**
+         * City or Zip Code
+         */
         location: {
           type: String,
         },
+        /**
+         * Hide forecast
+         */
         hideForecast: {
           type: Boolean,
           value: false,
         },
+        /**
+         * True if loading query from yahoo
+         */
         loading: {
           type: Boolean,
           notify: true,
         },
       },
 
-      computeResponse: function(response) {
-        console.log(response.query.results.channel);
-        return response.query.results.channel;
+      _computeResponse: function(response) {
+        if (response) {
+          console.log(response.query.results.channel);
+          return response.query.results.channel;
+        }
       },
 
       _getIcon: function(code){
