@@ -32,7 +32,7 @@ If you register an API key you get up to 20,000 requests/hour per IP [More info]
 ## Install
 
 ```
-bower i --S ryanburns23/paper-weather
+bower i ryanburns23/paper-weather --S
 ```
 
 ## Credits
