@@ -6,6 +6,7 @@ Material design weather element inspired by google weather.
 
 No api key required
 
+
 ## Usage
 <!--
 ```
@@ -22,12 +23,20 @@ No api key required
 <paper-weather location="Santa Barbara, CA"></paper-weather>
 ```
 
+
 ## Rate limits without an API Key:
 
 - Hourly Cap	2,000 requests/hour per IP
 - Daily Cap	None
 
 If you register an API key you get up to 20,000 requests/hour per IP [More info](https://developer.yahoo.com/yql/guide/usage_info_limits.html)
+
+
+## Install
+
+```
+bower i --S ryanburns23/paper-weather
+```
 
 
 ## Credits
