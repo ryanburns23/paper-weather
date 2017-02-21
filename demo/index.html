@@ -56,7 +56,7 @@
           }
         </style>
 
-        <paper-weather hide-forecast="[[hideForecast]]" show-extra-data="[[showExtraData]]" location="[[location]]"></paper-weather>
+        <paper-weather unit="[[unit]]" hide-forecast="[[hideForecast]]" show-extra-data="[[showExtraData]]" location="[[location]]"></paper-weather>
 
         <iron-selector attr-for-selected="name" selected="{{location}}">
           <template is="dom-repeat" items="[[places]]">
@@ -67,8 +67,11 @@
         <div class="center">
           <paper-checkbox checked="{{hideForecast}}">Hide Forecast</paper-checkbox>
           <paper-checkbox checked="{{showExtraData}}">Show Extra Data?</paper-checkbox>
+          <iron-selector attr-for-selected="name" selected="{{unit}}">
+            <paper-button name="f" raised>fahrenheit</paper-button>
+            <paper-button name="c" raised>celsius</paper-button>
+          </iron-selector>
         </div>
-
 
       </template>
       <script>
@@ -79,6 +82,10 @@
               location: {
                 type: String,
                 value: "sacramento, ca"
+              },
+              unit: {
+                type: String,
+                value: "f"
               },
               showExtraData: {
                 type: Boolean,

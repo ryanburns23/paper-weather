@@ -19,7 +19,7 @@
  ----------------|-------------|----------
  `--paper-weather-primary-text-color` | primary text color | `#878787`
  `--paper-weather-secondary-text-color` | secondary text color | `#bababa`
- `--paper-weather-loading-height` | height of conatiner when loading | `250px`
+ `--paper-weather-loading-height` | height of container when loading | `250px`
  `--paper-weather-spinner-color` | spinner color | `#2196F3`
  `--paper-weather-spinner-width` | spinner width | `5px`
 
@@ -215,7 +215,7 @@
 
     <iron-ajax
       auto
-      url="https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D'[[location]]')&format=json"
+      url="[[_computeWeatherQuery(location, unit)]]"
       handle-as="json"
       on-error="_handleError"
       loading="{{loading}}"
@@ -230,7 +230,7 @@
           <iron-image src="[[_getIconSrc(lastResponse.item.condition.code)]]" preload fade sizing="contain"></iron-image>
           <div class="today-temp">
             <span class="temp">[[lastResponse.item.condition.temp]]</span>
-            <span class="degrees">°F</span>
+            <span class="degrees">°[[lastResponse.units.temperature]]</span>
           </div>
         </div>
 
@@ -245,7 +245,7 @@
         <div class="item">Sunrise: [[lastResponse.astronomy.sunrise]]</div>
         <div class="item">Sunset: [[lastResponse.astronomy.sunset]]</div>
         <div class="item">Humidity: [[lastResponse.atmosphere.humidity]]%</div>
-        <div class="item">Wind: [[lastResponse.wind.speed]] mph</div>
+        <div class="item">Wind: [[lastResponse.wind.speed]] [[lastResponse.units.speed]]</div>
       </div>
 
       <div hidden$="[[hideForecast]]" class="forecast">
@@ -287,6 +287,13 @@
           computed: "_computeResponse(weather)",
         },
         /**
+         * f: fahrenheit | c: celsius
+         */
+        unit: {
+          type: String,
+          value: "f",
+        },
+        /**
          * City or Zip Code
          */
         location: {
@@ -315,6 +322,10 @@
           reflectToAttribute: true,
           value: true
         },
+      },
+
+      _computeWeatherQuery: function(location, unit) {
+        return "https://query.yahooapis.com/v1/public/yql?q=" + encodeURI('select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="'+location+'") and u="'+unit+'"&format=json');
       },
 
       _computeResponse: function(response) {
@@ -454,7 +465,7 @@
             return "thunder-weather"; //scattered thunderstorms
             break;
           case 39:
-            return "thunder-weather"; //scattered thunderstorms
+            return "rainy-weather"; //scattered thunderstorms
             break;
           case 40:
             return "rainy-weather"; //scattered showers
