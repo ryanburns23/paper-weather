@@ -46,6 +46,7 @@
       }
 
       .content{
+        margin-bottom: 20px;
         padding: 0 16px;
         @apply(--layout-horizontal);
         @apply(--layout-center-center);
@@ -67,7 +68,6 @@
       }
 
       .today{
-        margin: 20px 0;
         @apply(--layout-horizontal);
         @apply(--layout-center);
       }
@@ -175,16 +175,10 @@
       }
 
       paper-spinner-lite{
-        opacity: 0;
-        display: block;
-        transition: opacity 700ms;
-        position: absolute;
+        @apply(--layout-fit);
+        display: none;
         margin: auto;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        z-index: 1;
+        z-index: 2;
         height: 70px;
         width: 70px;
         --paper-spinner-color: var(--paper-weather-spinner-color, #2196F3);
@@ -192,7 +186,21 @@
         @apply(--paper-weather-spinner);
       }
       paper-spinner-lite[active]{
-        opacity: 1;
+        display: block;
+      }
+
+      .error{
+        @apply(--layout-fit);
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+        @apply(--paper-font-headline);
+        color: var(--paper-weather-primary-text-color);
+        z-index: 1;
+        background: white;
+      }
+      .error iron-image{
+        height: 80px;
+        width: 80px;
       }
 
       [hidden]{
@@ -204,6 +212,7 @@
       auto
       url="https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D'[[location]]')&format=json"
       handle-as="json"
+      on-error="_handleError"
       loading="{{loading}}"
       last-response="{{weather}}">
     </iron-ajax>
@@ -249,6 +258,14 @@
         </template>
       </div>
     </div>
+
+    <!-- Error -->
+    <template is="dom-if" if="[[error]]">
+      <div class="error">
+        <iron-image src="icons/unknown.png" preload fade sizing="contain"></iron-image>
+        <div>Error getting weather</div>
+      </div>
+    </template>
 
   </template>
 
@@ -297,9 +314,16 @@
 
       _computeResponse: function(response) {
         if (response) {
-          console.log(response.query.results.channel);
-          return response.query.results.channel;
+          if (response.query.results) {
+            this.error = false;
+            return response.query.results.channel;
+          }else {
+            this.error = true;
+          }
         }
+      },
+      _handleError: function(){
+        this.error = true;
       },
 
       _getIconSrc: function(code){
