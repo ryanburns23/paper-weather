@@ -7,7 +7,7 @@
 
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../polymer/polymer.html">
     <link rel="import" href="../../iron-selector/iron-selector.html">
     <link rel="import" href="../../paper-button/paper-button.html">
     <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
@@ -22,9 +22,8 @@
         line-height: 1.5;
       }
       .container{
-        margin: 30px auto;
         max-width: 800px;
-        margin: 0 auto;
+        margin: 30px auto;
       }
     </style>
   </head>
@@ -73,28 +72,30 @@
 
       </template>
       <script>
-        Polymer({
-          is: 'demo-element',
-          properties: {
-            location: {
-              type: String,
-              value: "sacramento, ca"
-            },
-            showExtraData: {
-              type: Boolean,
-              value: true
-            },
-            places: {
-              type: Array,
-              value: [
-                "sacramento, ca",
-                "san francisco, ca",
-                "santa barbara, ca",
-                "los angeles, ca",
-                "san diego, ca"
-              ]
+        document.addEventListener('WebComponentsReady', function() {
+          Polymer({
+            is: 'demo-element',
+            properties: {
+              location: {
+                type: String,
+                value: "sacramento, ca"
+              },
+              showExtraData: {
+                type: Boolean,
+                value: true
+              },
+              places: {
+                type: Array,
+                value: [
+                  "sacramento, ca",
+                  "san francisco, ca",
+                  "santa barbara, ca",
+                  "los angeles, ca",
+                  "san diego, ca"
+                ]
+              }
             }
-          }
+          });
         });
       </script>
     </dom-module>
