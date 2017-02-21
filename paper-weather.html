@@ -1,16 +1,29 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
-<link rel="import" href="../paper-item/paper-item.html">
-<link rel="import" href="../paper-item/paper-icon-item.html">
-<link rel="import" href="../paper-item/paper-item-body.html">
-<link rel="import" href="weather-icons.html">
+<link rel="import" href="../iron-image/iron-image.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../paper-spinner/paper-spinner-lite.html">
+<link rel="import" href="../paper-styles/shadow.html">
+<link rel="import" href="../paper-styles/typography.html">
+<link rel="import" href="../moment-element/moment-element.html">
 
 <!--
-`paper-weather`
+`paper-weather` material design weather element inspired by google weather
 
- Displays a 10 days forecast from <a href="https://developer.yahoo.com/weather/">Yahoo Weather API</a> <br>
- Weather icons from <a href="https://github.com/erikflowers/weather-icons">erikflowers/weather-icons</a>
+ Weather data: <a href="https://developer.yahoo.com/weather/">Yahoo Weather API</a> <br>
 
+ Weather icons: <a href="https://material.uplabs.com/posts/google-now-weather-icons-freebie">Naman Rastogi</a>
+
+ ### Styling
+ Custom property | Description | Default
+ ----------------|-------------|----------
+ `--paper-weather-primary-text-color` | primary text color | `#878787`
+ `--paper-weather-secondary-text-color` | secondary text color | `#bababa`
+ `--paper-weather-loading-height` | height of conatiner when loading | `250px`
+ `--paper-weather-spinner-color` | spinner color | `#2196F3`
+ `--paper-weather-spinner-width` | spinner width | `5px`
+
+@demo demo/index.html
 -->
 
 <dom-module id="paper-weather">
@@ -18,21 +31,172 @@
     <style>
       :host {
         display: block;
+        position: relative;
+        padding: 25px 0;
+        background: white;
+        max-width: 590px;
+        margin: 0 auto;
+        @apply(--shadow-elevation-2dp);
+
+        --paper-weather-primary-text-color: #878787;
+        --paper-weather-secondary-text-color: #bababa;
       }
+      :host([loading]){
+        height: var(--paper-weather-loading-height, 250px);
+      }
+
+      .content{
+        padding: 0 16px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+      }
+      .header{
+        overflow: hidden;
+        padding-left: 30px;
+      }
+      .location{
+        @apply(--paper-font-headline);
+        @apply(--paper-font-common-nowrap);
+        color: var(--paper-weather-primary-text-color);
+        font-weight: 500;
+      }
+      .time,
+      .condition{
+        @apply(--paper-font-subhead);
+        color: var(--paper-weather-primary-text-color);
+      }
+
+      .today{
+        margin: 20px 0;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+      }
+      .today .temp{
+        padding-left: 10px;
+        @apply(--paper-font-display3);
+        font-size: 64px;
+        color: #212121;
+        float: left;
+      }
+      .today .degrees{
+        @apply(--paper-font-body1);
+        font-size: 16px;
+        float: left;
+        margin-top: 6px;
+      }
+      .today iron-image{
+        height: 90px;
+        width: 90px;
+      }
+
+      .list{
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+        @apply(--layout-wrap);
+        margin-bottom: 10px;
+      }
+      .list .item{
+        margin: 0 15px;
+        @apply(--paper-font-subhead);
+        color: var(--paper-weather-primary-text-color);
+      }
+
+      .forecast{
+        padding: 0 16px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+      }
+      .forecast .forecast-item{
+        padding: 5px;
+        border-radius: 2px;
+        @apply(--layout-vertical);
+      }
+      .forecast-item .forecast-item-day{
+        @apply(--paper-font-body2);
+        color: var(--paper-weather-secondary-text-color);
+        text-align: center;
+      }
+      .forecast-item iron-image{
+        margin: 5px;
+        height: 50px;
+        width: 50px;
+      }
+      .forecast-item .forecast-item-temp{
+        @apply(--layout-horizontal);
+        @apply(--layout-center-justified);
+      }
+      .forecast-item .forecast-item-temp .high{
+        margin-right: 5px;
+        @apply(--paper-font-body2);
+        color: var(--paper-weather-primary-text-color);
+      }
+      .forecast-item .forecast-item-temp .low{
+        @apply(--paper-font-body2);
+        color: var(--paper-weather-secondary-text-color);
+      }
+
+      @media (max-width: 600px) {
+        .forecast {
+          padding-bottom: 10px;
+          padding-top: 10px;
+          @apply(--layout-justified);
+          overflow: scroll;
+          -webkit-overflow-scrolling: touch;
+        }
+        .forecast:after {
+           content: ' ';
+           flex: 0 0 16px;
+        }
+        .location{
+          @apply(--paper-font-subhead);
+          font-weight: bold;
+        }
+        .time,
+        .condition{
+          @apply(--paper-font-body1);
+        }
+        .today .temp{
+          @apply(--paper-font-display2);
+        }
+        .today iron-image{
+          height: 70px;
+          width: 70px;
+        }
+      }
+
+      @media (max-width: 400px) {
+        .today .temp{
+          @apply(--paper-font-display1);
+        }
+        .today iron-image{
+          height: 50px;
+          width: 50px;
+        }
+      }
+
+      paper-spinner-lite{
+        opacity: 0;
+        display: block;
+        transition: opacity 700ms;
+        position: absolute;
+        margin: auto;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 1;
+        height: 70px;
+        width: 70px;
+        --paper-spinner-color: var(--paper-weather-spinner-color, #2196F3);
+        --paper-spinner-stroke-width: var(--paper-weather-spinner-width, 5px);
+        @apply(--paper-weather-spinner);
+      }
+      paper-spinner-lite[active]{
+        opacity: 1;
+      }
+
       [hidden]{
-        display: none;
-      }
-      paper-icon-item{
-        --paper-item-icon-width: 35px;
-        --paper-item-focused-before: { display: none; }
-      }
-      .high{
-        color: red;
-        margin-left: 3px;
-      }
-      .low{
-        color: #00bfff;
-        margin-right: 3px;
+        display: none !important;
       }
     </style>
 
@@ -44,29 +208,48 @@
       last-response="{{weather}}">
     </iron-ajax>
 
-    <span hidden$="[[!loading]]">Loading Weather...</span>
-    <div hidden$="[[loading]]" class="weather">
-      <label>[[lastResponse.item.title]]</label>
-      <paper-icon-item>
-        <iron-icon item-icon icon="weather:[[_getIcon(lastResponse.item.condition.code)]]"></iron-icon>
-        <paper-item-body two-line>
-          <div>[[lastResponse.item.condition.temp]]°</div>
-          <div secondary>[[lastResponse.item.condition.text]]</div>
-        </paper-item-body>
-      </paper-icon-item>
-      <div hidden="[[hideForecast]]">
-        <label>10 Day Forecast</label>
+    <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
+
+    <div hidden$="[[loading]]">
+      <div class="content">
+        <div class="today">
+          <iron-image src="[[_getIconSrc(lastResponse.item.condition.code)]]" preload fade sizing="contain"></iron-image>
+          <div class="today-temp">
+            <span class="temp">[[lastResponse.item.condition.temp]]</span>
+            <span class="degrees">°F</span>
+          </div>
+        </div>
+
+        <div class="header">
+          <div class="location">[[lastResponse.location.city]], [[lastResponse.location.region]]</div>
+          <div class="time"><moment-element input-format="ddd, DD MMM YYYY hh:mm a" datetime="[[lastResponse.item.pubDate]]" output-format="dddd h:mm A"></moment-element></div>
+          <div class="condition">[[lastResponse.item.condition.text]]</div>
+        </div>
+      </div>
+
+      <div hidden$="[[!showExtraData]]" class="list">
+        <div class="item">Sunrise: [[lastResponse.astronomy.sunrise]]</div>
+        <div class="item">Sunset: [[lastResponse.astronomy.sunset]]</div>
+        <div class="item">Humidity: [[lastResponse.atmosphere.humidity]]%</div>
+        <div class="item">Wind: [[lastResponse.wind.speed]] mph</div>
+      </div>
+
+      <div hidden$="[[hideForecast]]" class="forecast">
         <template is="dom-repeat" items="[[lastResponse.item.forecast]]">
-          <paper-icon-item>
-            <iron-icon item-icon icon="weather:[[_getIcon(item.code)]]"></iron-icon>
-            <paper-item-body two-line>
-              <div><span class="low">[[item.low]]°</span>|<span class="high">[[item.high]]°</span>  [[item.text]]</div>
-              <div secondary>[[item.day]] - [[item.date]]</div>
-            </paper-item-body>
-          </paper-icon-item>
+          <template is="dom-if" if="[[_shouldRenderDay(index)]]">
+            <div class$="forecast-item item[[index]]">
+              <div class="forecast-item-day">[[item.day]]</div>
+              <iron-image sizing="contain" preload fade src="[[_getIconSrc(item.code)]]"></iron-image>
+              <div class="forecast-item-temp">
+                <span class="high">[[item.high]]°</span>
+                <span class="low">[[item.low]]°</span>
+              </div>
+            </div>
+          </template>
         </template>
       </div>
     </div>
+
   </template>
 
   <script>
@@ -74,7 +257,7 @@
       is: 'paper-weather',
       properties: {
         /**
-         * Last response
+         * Last weather response
          */
         lastResponse: {
           type: Object,
@@ -85,7 +268,14 @@
          * City or Zip Code
          */
         location: {
-          type: String,
+          type: String
+        },
+        /**
+         * If true, sunrise, sunset, humidity & wind are shown
+         */
+        showExtraData: {
+          type: Boolean,
+          value: false
         },
         /**
          * Hide forecast
@@ -100,6 +290,8 @@
         loading: {
           type: Boolean,
           notify: true,
+          reflectToAttribute: true,
+          value: true
         },
       },
 
@@ -110,160 +302,169 @@
         }
       },
 
+      _getIconSrc: function(code){
+        return this.resolveUrl('icons/' + this._getIcon( parseInt(code) ) + '.png' );
+      },
       _getIcon: function(code){
-        var code = parseInt(code);
         switch (code) {
           case 0:
-            return "tornado";
+            return "storm-weather"; //toronado
             break;
           case 1:
-            return "day-storm-showers";
+            return "storm-weather"; //tropical storm
             break;
           case 2:
-            return "hurricane";
+            return "windy-weather"; //hurricane
             break;
           case 3:
-            return "thunderstorm";
+            return "storm-weather"; //severe thunderstorms
             break;
           case 4:
-            return "thunderstorm";
+            return "thunder-weather"; //thunderstorms
             break;
           case 5:
-            return "rain-mix";
+            return "rain-snow"; //mixed rain and snow
             break;
           case 6:
-            return "rain-mix";
+            return "rain-snow"; //mixed rain and sleet
             break;
           case 7:
-            return "rain-mix";
+            return "rain-snow"; //mixed snow and sleet
             break;
           case 8:
-            return "hail";
+            return "rainy-weather"; //freezing drizzle
             break;
           case 9:
-            return "showers";
+            return "rainy-weather"; //drizzle
             break;
           case 10:
-            return "hail";
+            return "storm-weather"; //freezing rain
             break;
           case 11:
-            return "showers";
+            return "rainy-weather"; //showers
             break;
           case 12:
-            return "showers";
+            return "rainy-weather"; //showers
             break;
           case 13:
-            return "snow";
+            return "snow-weather"; //snow flurries
             break;
           case 14:
-            return "day-snowx";
+            return "rain-snow"; //light snow showers
             break;
           case 15:
-            return "snow-wind";
+            return "snow-weather"; //blowing snow
             break;
           case 16:
-            return "snow";
+            return "snow-weather"; //snow
             break;
           case 17:
-            return "hail";
+            return "rainy-weather"; //hail
             break;
           case 18:
-            return "rain-mix";
+            return "rain-snow"; //sleet
             break;
           case 19:
-            return "dust";
+            return "haze-weather"; //dust
             break;
           case 20:
-            return "fog";
+            return "haze-weather"; //foggy
             break;
           case 21:
-            return "windy";
+            return "haze-weather"; //haze
             break;
           case 22:
-            return "smoke";
+            return "haze-weather"; //smoky
             break;
           case 23:
-            return "strong-wind";
+            return "windy-weather"; //blustery? lol
             break;
           case 24:
-            return "strong-wind";
+            return "windy-weather"; //windy
             break;
           case 25:
-            return "snowflake-cold";
+            return "cloudy-weather"; //cold - need a better cold icon
             break;
           case 26:
-            return "cloudy";
+            return "cloudy-weather"; //cloudy
             break;
           case 27:
-            return "night-cloudy";
+            return "mostly-cloudy-night"; //mostly cloudy (night)
             break;
           case 28:
-            return "day-cloudy";
+            return "mostly-cloudy"; //mostly cloudy (day)
             break;
           case 29:
-            return "night-cloudy";
+            return "partly-cloudy-night"; //partly cloudy (night)
             break;
           case 30:
-            return "day-cloudy";
+            return "partly-cloudy"; //partly cloudy (day)
             break;
           case 31:
-            return "night-clear";
+            return "clear-night"; //clear (night)
             break;
           case 32:
-            return "day-sunny";
+            return "clear-day"; //sunny
             break;
           case 33:
-            return "night-partly-cloudy";
+            return "partly-cloudy-night"; //fair (night)
             break;
           case 34:
-            return "day-sunny-overcast";
+            return "partly-cloudy"; //fair (day)
             break;
           case 35:
-            return "rain-mix";
+            return "rain-snow"; //mixed rain and hail
             break;
           case 36:
-            return "hot";
+            return "clear-day"; //hot
             break;
           case 37:
-            return "day-storm-showers";
+            return "thunder-weather"; //isolated thunderstorms
             break;
           case 38:
-            return "day-storm-showers";
+            return "thunder-weather"; //scattered thunderstorms
             break;
           case 39:
-            return "day-storm-showers";
+            return "thunder-weather"; //scattered thunderstorms
             break;
           case 40:
-            return "showers";
+            return "rainy-weather"; //scattered showers
             break;
           case 41:
-            return "snow-wind";
+            return "snow-weather"; //heavy snow
             break;
           case 42:
-            return "snow";
+            return "snow-weather"; //scattered snow showers
             break;
           case 43:
-            return "snow-wind";
+            return "snow-weather"; //heavy snow
             break;
           case 44:
-            return "day-sunny-overcast";
+            return "partly-cloudy"; //partly cloudy
             break;
           case 45:
-            return "day-storm-showers";
+            return "storm-weather"; //thundershowers
             break;
           case 46:
-            return "snow";
+            return "snow-weather"; //snow showers
             break;
           case 47:
-            return "day-storm-showers";
+            return "thunder-weather"; //isolated thundershowers
             break;
           case 3200:
-            return "stars";
+            return "unknown"; //not available
             break;
           default:
             console.log("error");
         }
       },
+
+      // Only render a 7 day forecast
+      _shouldRenderDay: function(index){
+        if (index < 8) {
+          return true
+        }
+      }
 
     });
   </script>

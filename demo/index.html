@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <title>Paper Weather Demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-selector/iron-selector.html">
+    <link rel="import" href="../../paper-button/paper-button.html">
+    <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
+
+    <link rel="import" href="../paper-weather.html">
+
+    <style>
+      body {
+        overflow: auto;
+        margin: 0;
+        font-family: 'Roboto', 'Noto', sans-serif;
+        line-height: 1.5;
+      }
+      .container{
+        margin: 0px auto;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+
+    <dom-module id="demo-element">
+      <template>
+        <style>
+          :host {
+            display: block;
+          }
+          iron-selector, .center{
+            @apply(--layout-horizontal);
+            @apply(--layout-center-center);
+            @apply(--layout-wrap);
+            margin-top: 20px;
+          }
+          paper-button{
+            @apply(--paper-font-button);
+            margin: 10px;
+            background: #eee;
+          }
+          paper-button.iron-selected{
+            background: #2196F3;
+            color: white;
+          }
+
+          paper-checkbox{
+            margin-left: 10px;
+          }
+        </style>
+
+        <paper-weather hide-forecast="[[hideForecast]]" show-extra-data="[[showExtraData]]" location="[[location]]"></paper-weather>
+
+        <iron-selector attr-for-selected="name" selected="{{location}}">
+          <template is="dom-repeat" items="[[places]]">
+            <paper-button name="[[item]]" raised>[[item]]</paper-button>
+          </template>
+        </iron-selector>
+
+        <div class="center">
+          <paper-checkbox checked="{{hideForecast}}">Hide Forecast</paper-checkbox>
+          <paper-checkbox checked="{{showExtraData}}">Show Extra Data?</paper-checkbox>
+        </div>
+
+
+      </template>
+      <script>
+        Polymer({
+          is: 'demo-element',
+          properties: {
+            location: {
+              type: String,
+              value: "sacramento, ca"
+            },
+            showExtraData: {
+              type: Boolean,
+              value: true
+            },
+            places: {
+              type: Array,
+              value: [
+                "sacramento, ca",
+                "san francisco, ca",
+                "santa barbara, ca",
+                "los angeles, ca",
+                "san diego, ca"
+              ]
+            }
+          }
+        });
+      </script>
+    </dom-module>
+
+    <div class="container">
+      <demo-element></demo-element>
+    </div>
+
+  </body>
+</html>
