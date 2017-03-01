@@ -1,11 +1,12 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
-<link rel="import" href="../iron-image/iron-image.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../paper-styles/shadow.html">
 <link rel="import" href="../paper-styles/typography.html">
 <link rel="import" href="../moment-element/moment-element.html">
+
+<link rel="import" href="paper-weather-icons.html">
 
 <!--
 `paper-weather` material design weather element inspired by google weather
@@ -43,11 +44,6 @@
       }
       :host([loading]){
         height: var(--paper-weather-loading-height, 250px);
-      }
-
-      /* all iron images need a bg color for preload fade to work */
-      iron-image{
-        background: white;
       }
 
       .content{
@@ -89,7 +85,7 @@
         float: left;
         margin-top: 6px;
       }
-      .today iron-image{
+      .today img{
         height: 90px;
         width: 90px;
       }
@@ -121,7 +117,7 @@
         color: var(--paper-weather-secondary-text-color);
         text-align: center;
       }
-      .forecast-item iron-image{
+      .forecast-item img{
         margin: 5px;
         height: 50px;
         width: 50px;
@@ -163,7 +159,7 @@
         .today .temp{
           @apply(--paper-font-display2);
         }
-        .today iron-image{
+        .today img{
           height: 70px;
           width: 70px;
         }
@@ -173,7 +169,7 @@
         .today .temp{
           @apply(--paper-font-display1);
         }
-        .today iron-image{
+        .today img{
           height: 50px;
           width: 50px;
         }
@@ -203,7 +199,7 @@
         z-index: 1;
         background: white;
       }
-      .error iron-image{
+      .error img{
         height: 80px;
         width: 80px;
       }
@@ -222,12 +218,14 @@
       last-response="{{weather}}">
     </iron-ajax>
 
+    <paper-weather-icons icons="{{icons}}"></paper-weather-icons>
+
     <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
 
     <div hidden$="[[loading]]">
       <div class="content">
         <div class="today">
-          <iron-image src="[[_getIconSrc(lastResponse.item.condition.code)]]" preload fade sizing="contain"></iron-image>
+          <img src="[[_getIconSrc(lastResponse.item.condition.code)]]">
           <div class="today-temp">
             <span class="temp">[[lastResponse.item.condition.temp]]</span>
             <span class="degrees">°[[lastResponse.units.temperature]]</span>
@@ -253,7 +251,7 @@
           <template is="dom-if" if="[[_shouldRenderDay(index)]]">
             <div class$="forecast-item item[[index]]">
               <div class="forecast-item-day">[[item.day]]</div>
-              <iron-image sizing="contain" preload fade src="[[_getIconSrc(item.code)]]"></iron-image>
+              <img src="[[_getIconSrc(item.code)]]">
               <div class="forecast-item-temp">
                 <span class="high">[[item.high]]°</span>
                 <span class="low">[[item.low]]°</span>
@@ -267,7 +265,7 @@
     <!-- Error -->
     <template is="dom-if" if="[[error]]">
       <div class="error">
-        <iron-image src="icons/unknown.png" preload fade sizing="contain"></iron-image>
+        <img src="[[icons.unkown]]" preload fade sizing="contain">
         <div>Error getting weather</div>
       </div>
     </template>
@@ -344,7 +342,7 @@
       },
 
       _getIconSrc: function(code){
-        return this.resolveUrl('icons/' + this._getIcon( parseInt(code) ) + '.png' );
+        return this.icons[ this._getIcon( parseInt(code)) ];
       },
       _getIcon: function(code){
         switch (code) {
