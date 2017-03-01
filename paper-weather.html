@@ -6,7 +6,7 @@
 <link rel="import" href="../paper-styles/typography.html">
 <link rel="import" href="../moment-element/moment-element.html">
 
-<!-- <link rel="import" href="paper-weather-icons.html"> -->
+<link rel="import" href="paper-weather-icons.html">
 
 <!--
 `paper-weather` material design weather element inspired by google weather
@@ -342,9 +342,7 @@
       },
 
       _getIconSrc: function(code){
-        return this.resolveUrl('icons/' + this._getIcon( parseInt(code) ) + '.png' );
-
-        // return this.icons[ this._getIcon( parseInt(code)) ];
+        return this.icons[ this._getIcon( parseInt(code)) ];
       },
       _getIcon: function(code){
         switch (code) {
