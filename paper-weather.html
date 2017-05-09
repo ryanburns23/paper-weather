@@ -6,7 +6,7 @@
 <link rel="import" href="../paper-styles/typography.html">
 <link rel="import" href="../moment-element/moment-element.html">
 
-<link rel="import" href="paper-weather-icons.html">
+<script src="icons.js"></script>
 
 <!--
 `paper-weather` material design weather element inspired by google weather
@@ -218,14 +218,12 @@
       last-response="{{weather}}">
     </iron-ajax>
 
-    <paper-weather-icons icons="{{icons}}"></paper-weather-icons>
-
     <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
 
     <div hidden$="[[loading]]">
       <div class="content">
         <div class="today">
-          <img src="[[_getIconSrc(lastResponse.item.condition.code)]]">
+          <img draggable="false" src="[[_getIconSrc(lastResponse.item.condition.code)]]">
           <div class="today-temp">
             <span class="temp">[[lastResponse.item.condition.temp]]</span>
             <span class="degrees">°[[lastResponse.units.temperature]]</span>
@@ -251,7 +249,7 @@
           <template is="dom-if" if="[[_shouldRenderDay(index)]]">
             <div class$="forecast-item item[[index]]">
               <div class="forecast-item-day">[[item.day]]</div>
-              <img src="[[_getIconSrc(item.code)]]">
+              <img draggable="false" src="[[_getIconSrc(item.code)]]">
               <div class="forecast-item-temp">
                 <span class="high">[[item.high]]°</span>
                 <span class="low">[[item.low]]°</span>
@@ -265,7 +263,7 @@
     <!-- Error -->
     <template is="dom-if" if="[[error]]">
       <div class="error">
-        <img src="[[icons.unkown]]">
+        <img draggable="false" src="[[_icons.unknown]]">
         <div>Error getting weather</div>
       </div>
     </template>
@@ -321,6 +319,13 @@
           reflectToAttribute: true,
           value: true
         },
+        /**
+         * Icons
+         */
+        _icons: {
+          type: Object,
+          value: icons
+        }
       },
 
       _computeWeatherQuery: function(location, unit) {
@@ -342,7 +347,7 @@
       },
 
       _getIconSrc: function(code){
-        return this.icons[ this._getIcon( parseInt(code)) ];
+        return this._icons[ this._getIcon( parseInt(code)) ];
       },
       _getIcon: function(code){
         switch (code) {
