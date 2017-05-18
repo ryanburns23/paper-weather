@@ -4,7 +4,6 @@
 <link rel="import" href="../paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../paper-styles/shadow.html">
 <link rel="import" href="../paper-styles/typography.html">
-<link rel="import" href="../moment-element/moment-element.html">
 
 <script src="icons.js"></script>
 
@@ -215,7 +214,7 @@
       handle-as="json"
       on-error="_handleError"
       loading="{{loading}}"
-      last-response="{{weather}}">
+      last-response="{{_weather}}">
     </iron-ajax>
 
     <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
@@ -232,7 +231,7 @@
 
         <div class="header">
           <div class="location">[[lastResponse.location.city]], [[lastResponse.location.region]]</div>
-          <div class="time"><moment-element input-format="ddd, DD MMM YYYY hh:mm a" datetime="[[lastResponse.item.pubDate]]" output-format="dddd h:mm A"></moment-element></div>
+          <div class="time">[[_computeDateTime(lastResponse.item.pubDate)]]</div>
           <div class="condition">[[lastResponse.item.condition.text]]</div>
         </div>
       </div>
@@ -281,7 +280,7 @@
           type: Object,
           notify: true,
           readOnly: true,
-          computed: "_computeResponse(weather)",
+          computed: "_computeResponse(_weather)",
         },
         /**
          * f: fahrenheit | c: celsius
@@ -325,11 +324,19 @@
         _icons: {
           type: Object,
           value: icons
+        },
+        /**
+         * Weather response from iron-ajax
+         */
+        _weather: {
+          type: Object
         }
       },
 
       _computeWeatherQuery: function(location, unit) {
-        return "https://query.yahooapis.com/v1/public/yql?q=" + encodeURI('select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="'+location+'") and u="'+unit+'"&format=json');
+        if (location && unit) {
+          return "https://query.yahooapis.com/v1/public/yql?q=" + encodeURI('select * from weather.forecast where woeid in (select woeid from geo.places(1) where text="'+location+'") and u="'+unit+'"&format=json');
+        }
       },
 
       _computeResponse: function(response) {
@@ -345,6 +352,22 @@
       _handleError: function(){
         this.error = true;
       },
+      _computeDateTime: function(datestring){
+        if (datestring) {
+          var date = new Date(datestring);
+          var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+          var day = days[ date.getDay() ];
+          var hours = date.getHours();
+          var minutes = date.getMinutes();
+          var ampm = hours >= 12 ? 'pm' : 'am';
+          hours = hours % 12;
+          hours = hours ? hours : 12; // the hour '0' should be '12'
+          minutes = minutes < 10 ? '0'+minutes : minutes;
+          var strTime = day + ' ' + hours + ':' + minutes + ' ' + ampm;
+          return strTime;
+        }
+      },
+
 
       _getIconSrc: function(code){
         return this._icons[ this._getIcon( parseInt(code)) ];
