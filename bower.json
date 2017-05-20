@@ -6,7 +6,8 @@
     "iron-ajax": "PolymerElements/iron-ajax#1 - 2",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#1 - 2",
     "paper-styles": "PolymerElements/paper-styles#1 - 2",
-    "paper-spinner": "PolymerElements/paper-spinner#1 - 2"
+    "paper-spinner": "PolymerElements/paper-spinner#1 - 2",
+    "moment": "^2.18.1"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#1 - 2",

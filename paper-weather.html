@@ -5,6 +5,7 @@
 <link rel="import" href="../paper-styles/shadow.html">
 <link rel="import" href="../paper-styles/typography.html">
 
+<link rel="import" href="moment-import.html">
 <script src="icons.js"></script>
 
 <!--
@@ -354,20 +355,9 @@
       },
       _computeDateTime: function(datestring){
         if (datestring) {
-          var date = new Date(datestring);
-          var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-          var day = days[ date.getDay() ];
-          var hours = date.getHours();
-          var minutes = date.getMinutes();
-          var ampm = hours >= 12 ? 'pm' : 'am';
-          hours = hours % 12;
-          hours = hours ? hours : 12; // the hour '0' should be '12'
-          minutes = minutes < 10 ? '0'+minutes : minutes;
-          var strTime = day + ' ' + hours + ':' + minutes + ' ' + ampm;
-          return strTime;
+          return moment(datestring, "ddd, DD MMM YYYY hh:mm a").format('dddd h:mm a');
         }
       },
-
 
       _getIconSrc: function(code){
         return this._icons[ this._getIcon( parseInt(code)) ];
