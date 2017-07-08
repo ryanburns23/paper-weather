@@ -57,6 +57,8 @@
         </style>
 
         <paper-weather unit="[[unit]]" hide-forecast="[[hideForecast]]" show-extra-data="[[showExtraData]]" location="[[location]]"></paper-weather>
+        <br>
+        <paper-weather list unit="[[unit]]" hide-forecast="[[hideForecast]]" show-extra-data="[[showExtraData]]" location="[[location]]"></paper-weather>
 
         <iron-selector attr-for-selected="name" selected="{{location}}">
           <template is="dom-repeat" items="[[places]]">
@@ -81,7 +83,7 @@
             properties: {
               location: {
                 type: String,
-                value: "sacramento, ca"
+                value: "santa barbara, ca",
               },
               unit: {
                 type: String,

@@ -11,15 +11,13 @@
 <!--
 `paper-weather` material design weather element inspired by google weather
 
- Weather data: <a href="https://developer.yahoo.com/weather/">Yahoo Weather API</a> <br>
-
- Weather icons: <a href="https://material.uplabs.com/posts/google-now-weather-icons-freebie">Naman Rastogi</a>
+Material design weather element inspired by google weather
 
  ### Styling
  Custom property | Description | Default
  ----------------|-------------|----------
- `--paper-weather-primary-text-color` | primary text color | `#878787`
- `--paper-weather-secondary-text-color` | secondary text color | `#bababa`
+ `--paper-weather-primary-text-color` | primary text color | `rgba(0, 0, 0, .87)`
+ `--paper-weather-secondary-text-color` | secondary text color | `rgba(0, 0, 0, .54)`
  `--paper-weather-loading-height` | height of container when loading | `250px`
  `--paper-weather-spinner-color` | spinner color | `#2196F3`
  `--paper-weather-spinner-width` | spinner width | `5px`
@@ -37,10 +35,11 @@
         background: white;
         max-width: 590px;
         margin: 0 auto;
-        @apply(--shadow-elevation-2dp);
+        @apply --shadow-elevation-2dp;
+        color: var(--paper-weather-primary-text-color);
 
-        --paper-weather-primary-text-color: #878787;
-        --paper-weather-secondary-text-color: #bababa;
+        --paper-weather-primary-text-color: rgba(0, 0, 0, .87);
+        --paper-weather-secondary-text-color: rgba(0, 0, 0, .54);
       }
       :host([loading]){
         height: var(--paper-weather-loading-height, 250px);
@@ -49,38 +48,41 @@
       .content{
         margin-bottom: 20px;
         padding: 0 16px;
-        @apply(--layout-horizontal);
-        @apply(--layout-center-center);
+        @apply --layout-horizontal;
+        @apply --layout-center-center;
+      }
+      .flex{
+        @apply --layout-flex;
       }
       .header{
         overflow: hidden;
         padding-left: 30px;
       }
       .location{
-        @apply(--paper-font-headline);
-        @apply(--paper-font-common-nowrap);
+        @apply --paper-font-headline;
+        @apply --paper-font-common-nowrap;
         color: var(--paper-weather-primary-text-color);
         font-weight: 500;
       }
       .time,
       .condition{
-        @apply(--paper-font-subhead);
-        color: var(--paper-weather-primary-text-color);
+        @apply --paper-font-subhead;
+        color: var(--paper-weather-secondary-text-color);
       }
 
       .today{
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
+        @apply --layout-horizontal;
+        @apply --layout-center;
       }
       .today .temp{
         padding-left: 10px;
-        @apply(--paper-font-display3);
+        @apply --paper-font-display3;
         font-size: 64px;
-        color: #212121;
+        color: var(--paper-weather-primary-text-color);
         float: left;
       }
       .today .degrees{
-        @apply(--paper-font-body1);
+        @apply --paper-font-body1;
         font-size: 16px;
         float: left;
         margin-top: 6px;
@@ -91,29 +93,29 @@
       }
 
       .list{
-        @apply(--layout-horizontal);
-        @apply(--layout-center-center);
-        @apply(--layout-wrap);
+        @apply --layout-horizontal;
+        @apply --layout-center-center;
+        @apply --layout-wrap;
         margin-bottom: 10px;
       }
       .list .item{
         margin: 0 15px;
-        @apply(--paper-font-subhead);
-        color: var(--paper-weather-primary-text-color);
+        @apply --paper-font-body1;
+        color: var(--paper-weather-secondary-text-color);
       }
 
       .forecast{
         padding: 0 16px;
-        @apply(--layout-horizontal);
-        @apply(--layout-center-justified);
+        @apply --layout-horizontal;
+        @apply --layout-center-justified;
       }
       .forecast .forecast-item{
         padding: 5px;
         border-radius: 2px;
-        @apply(--layout-vertical);
+        @apply --layout-vertical;
       }
       .forecast-item .forecast-item-day{
-        @apply(--paper-font-body2);
+        @apply --paper-font-body2;
         color: var(--paper-weather-secondary-text-color);
         text-align: center;
       }
@@ -122,25 +124,123 @@
         height: 50px;
         width: 50px;
       }
-      .forecast-item .forecast-item-temp{
-        @apply(--layout-horizontal);
-        @apply(--layout-center-justified);
+      .forecast-item-temp{
+        @apply --layout-horizontal;
+        @apply --layout-center-justified;
       }
-      .forecast-item .forecast-item-temp .high{
+      .forecast-item-temp .high{
         margin-right: 5px;
-        @apply(--paper-font-body2);
+        @apply --paper-font-body2;
         color: var(--paper-weather-primary-text-color);
       }
-      .forecast-item .forecast-item-temp .low{
-        @apply(--paper-font-body2);
+      .forecast-item-temp .low{
+        @apply --paper-font-body2;
         color: var(--paper-weather-secondary-text-color);
+      }
+
+
+      /* LIST VIEW */
+      :host([list]){
+        max-width: 250px;
+        padding-bottom: 0;
+      }
+      :host([list]) .list-forecast{
+        @apply --layout-vertical;
+        max-height: 150px;
+        transition: .3s;
+        overflow: hidden;
+      }
+      :host([list]) .today{
+        @apply --layout-justified;
+      }
+      :host([list]) .today .temp{
+        padding-left: 0;
+      }
+      :host([list]) .today img{
+        height: 70px;
+        width: 70px;
+      }
+      :host([list]) .list{
+        margin-top: 10px;
+        @apply --layout-vertical;
+        align-items: flex-start;
+      }
+      :host([list]) .list{
+        @apply --layout-vertical;
+        align-items: flex-start;
+      }
+      .list-location{
+        @apply --paper-font-headline;
+        margin-bottom: 5px;
+      }
+      .list-time{
+        @apply --paper-font-body2;
+        color: var(--paper-weather-secondary-text-color);
+        margin-bottom: 14px;
+      }
+      :host([list]) .list-content{
+        text-align: left;
+        padding: 0 14px;
+      }
+      :host([list]) .list-forecast[opened]{
+        max-height: 1000px;
+      }
+      :host([list]) .list-forecast-item{
+        @apply --paper-font-body2;
+        color: var(--paper-weather-secondary-text-color);
+        padding: 0 14px;
+        @apply --layout-horizontal;
+        @apply --layout-center;
+        min-height: 50px;
+      }
+      :host([list]) .forecast-item-day{
+        width: 55%;
+      }
+      :host([list]) .forecast-item-temp .high{
+        margin-right: 0px;
+      }
+      :host([list]) .list-forecast-item img{
+        margin: 5px;
+        height: 20px;
+        width: 20px;
+      }
+      .list-footer{
+        border-top: 1px solid rgba(0, 0, 0, .08);
+      }
+      .toggle-button{
+        @apply --layout-inline;
+        @apply --layout-center-center;
+        color: var(--paper-weather-primary-text-color);
+        position: relative;
+        box-sizing: border-box;
+        min-width: 5.14em;
+        margin: 0 0.29em;
+        background: transparent;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        -webkit-tap-highlight-color: transparent;
+        font: inherit;
+        text-transform: uppercase;
+        outline-width: 0;
+        border-radius: 3px;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: pointer;
+        z-index: 0;
+        padding: 0.7em 0.57em;
+
+        @apply --paper-font-button;
+      }
+      :host([list]) .hide-on-list-view{
+        display: none !important;
       }
 
       @media (max-width: 600px) {
         .forecast {
           padding-bottom: 10px;
           padding-top: 10px;
-          @apply(--layout-justified);
+          @apply --layout-justified;
           overflow: auto;
           -webkit-overflow-scrolling: touch;
         }
@@ -149,15 +249,15 @@
            flex: 0 0 16px;
         }
         .location{
-          @apply(--paper-font-subhead);
+          @apply --paper-font-subhead;
           font-weight: bold;
         }
         .time,
         .condition{
-          @apply(--paper-font-body1);
+          @apply --paper-font-body1;
         }
         .today .temp{
-          @apply(--paper-font-display2);
+          @apply --paper-font-display2;
         }
         .today img{
           height: 70px;
@@ -167,7 +267,7 @@
 
       @media (max-width: 400px) {
         .today .temp{
-          @apply(--paper-font-display1);
+          @apply --paper-font-display1;
         }
         .today img{
           height: 50px;
@@ -176,7 +276,7 @@
       }
 
       paper-spinner-lite{
-        @apply(--layout-fit);
+        @apply --layout-fit;
         display: none;
         margin: auto;
         z-index: 2;
@@ -191,10 +291,10 @@
       }
 
       .error{
-        @apply(--layout-fit);
-        @apply(--layout-vertical);
-        @apply(--layout-center-center);
-        @apply(--paper-font-headline);
+        @apply --layout-fit;
+        @apply --layout-vertical;
+        @apply --layout-center-center;
+        @apply --paper-font-headline;
         color: var(--paper-weather-primary-text-color);
         z-index: 1;
         background: white;
@@ -221,43 +321,93 @@
     <paper-spinner-lite active="[[loading]]"></paper-spinner-lite>
 
     <div hidden$="[[loading]]">
-      <div class="content">
-        <div class="today">
-          <img draggable="false" src="[[_getIconSrc(lastResponse.item.condition.code)]]">
-          <div class="today-temp">
-            <span class="temp">[[lastResponse.item.condition.temp]]</span>
-            <span class="degrees">°[[lastResponse.units.temperature]]</span>
+
+      <!-- CARD VIEW -->
+      <template is="dom-if" if="[[!list]]">
+        <div class="content">
+          <div class="today">
+            <img draggable="false" src="[[_getIconSrc(lastResponse.item.condition.code)]]">
+            <div class="today-temp">
+              <span class="temp">[[lastResponse.item.condition.temp]]</span>
+              <span class="degrees">°[[lastResponse.units.temperature]]</span>
+            </div>
+          </div>
+
+          <div class="header">
+            <div class="location">[[lastResponse.location.city]], [[lastResponse.location.region]]</div>
+            <div class="time">[[_computeDateTime(lastResponse.item.pubDate)]]</div>
+            <div class="condition">[[lastResponse.item.condition.text]]</div>
           </div>
         </div>
 
-        <div class="header">
-          <div class="location">[[lastResponse.location.city]], [[lastResponse.location.region]]</div>
-          <div class="time">[[_computeDateTime(lastResponse.item.pubDate)]]</div>
-          <div class="condition">[[lastResponse.item.condition.text]]</div>
+        <div hidden$="[[!showExtraData]]" class="list hide-on-list-view">
+          <div class="item">Sunrise: [[lastResponse.astronomy.sunrise]]</div>
+          <div class="item">Sunset: [[lastResponse.astronomy.sunset]]</div>
+          <div class="item">Humidity: [[lastResponse.atmosphere.humidity]]%</div>
+          <div class="item">Wind: [[lastResponse.wind.speed]] [[lastResponse.units.speed]]</div>
         </div>
-      </div>
 
-      <div hidden$="[[!showExtraData]]" class="list">
-        <div class="item">Sunrise: [[lastResponse.astronomy.sunrise]]</div>
-        <div class="item">Sunset: [[lastResponse.astronomy.sunset]]</div>
-        <div class="item">Humidity: [[lastResponse.atmosphere.humidity]]%</div>
-        <div class="item">Wind: [[lastResponse.wind.speed]] [[lastResponse.units.speed]]</div>
-      </div>
+        <div hidden$="[[hideForecast]]" class="forecast">
+          <template is="dom-repeat" items="[[lastResponse.item.forecast]]">
+            <template is="dom-if" if="[[_shouldRenderDay(index)]]">
+              <div class$="forecast-item item[[index]]">
+                <div class="forecast-item-day">[[item.day]]</div>
+                <img draggable="false" src="[[_getIconSrc(item.code)]]">
+                <div class="forecast-item-temp">
+                  <span class="high">[[item.high]]°</span>
+                  <span class="low">[[item.low]]°</span>
+                </div>
+              </div>
+            </template>
+          </template>
+        </div>
+      </template>
 
-      <div hidden$="[[hideForecast]]" class="forecast">
-        <template is="dom-repeat" items="[[lastResponse.item.forecast]]">
-          <template is="dom-if" if="[[_shouldRenderDay(index)]]">
-            <div class$="forecast-item item[[index]]">
-              <div class="forecast-item-day">[[item.day]]</div>
+      <!-- LIST VIEW -->
+      <template is="dom-if" if="[[list]]">
+        <div class="list-content">
+          <div class="list-header">
+            <div class="list-location">[[lastResponse.location.city]], [[lastResponse.location.region]]</div>
+            <div class="list-time">[[_computeDateTime(lastResponse.item.pubDate)]], [[lastResponse.item.condition.text]]</div>
+          </div>
+
+          <div class="today">
+            <div class="today-temp">
+              <span class="temp">[[lastResponse.item.condition.temp]]</span>
+              <span class="degrees">°[[lastResponse.units.temperature]]</span>
+            </div>
+            <img draggable="false" src="[[_getIconSrc(lastResponse.item.condition.code)]]">
+          </div>
+        </div>
+
+        <div hidden$="[[!showExtraData]]" class="list">
+          <div class="item">Sunrise: [[lastResponse.astronomy.sunrise]]</div>
+          <div class="item">Sunset: [[lastResponse.astronomy.sunset]]</div>
+          <div class="item">Humidity: [[lastResponse.atmosphere.humidity]]%</div>
+          <div class="item">Wind: [[lastResponse.wind.speed]] [[lastResponse.units.speed]]</div>
+        </div>
+
+        <div opened$="[[opened]]" class="list-forecast">
+          <template is="dom-repeat" items="[[lastResponse.item.forecast]]">
+            <div class$="list-forecast-item item[[index]]">
+              <div class="forecast-item-day">[[_computeFullDay(item.day)]]</div>
               <img draggable="false" src="[[_getIconSrc(item.code)]]">
+              <div class="flex"></div>
               <div class="forecast-item-temp">
-                <span class="high">[[item.high]]°</span>
-                <span class="low">[[item.low]]°</span>
+                <span class="high">[[item.high]]°</span><span class="low">/[[item.low]]°</span>
               </div>
             </div>
           </template>
-        </template>
-      </div>
+        </div>
+
+        <div class="list-footer">
+          <div on-tap="_toggleExpand" class="toggle-button">
+            <span hidden$="[[opened]]">More</span>
+            <span hidden$="[[!opened]]">Less</span>
+          </div>
+        </div>
+      </template>
+
     </div>
 
     <!-- Error -->
@@ -289,6 +439,22 @@
         unit: {
           type: String,
           value: "f",
+        },
+        /**
+         * set to true for list view
+         */
+        list: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        },
+        /**
+         * true when list view is exapanded
+         */
+        opened: {
+          type: Boolean,
+          notify: true,
+          value: false
         },
         /**
          * City or Zip Code
@@ -362,6 +528,44 @@
       _getIconSrc: function(code){
         return this._icons[ this._getIcon( parseInt(code)) ];
       },
+
+      // Only render a 7 day forecast
+      _shouldRenderDay: function(index){
+        if (index < 8) {
+          return true
+        }
+      },
+
+      _toggleExpand: function(){
+        this.opened = !this.opened;
+      },
+
+      _computeFullDay: function(day){
+        switch(day) {
+          case 'Mon':
+            return "Monday";
+            break;
+          case 'Tue':
+            return "Tuesday";
+            break;
+          case 'Wed':
+            return "Wednesday";
+            break;
+          case 'Thu':
+            return "Thursday";
+            break;
+          case 'Fri':
+            return "Friday";
+            break;
+          case 'Sat':
+            return "Saturday";
+            break;
+          case 'Sun':
+            return "Sunday";
+            break;
+        }
+      },
+
       _getIcon: function(code){
         switch (code) {
           case 0:
@@ -513,13 +717,6 @@
             break;
           default:
             console.log("error");
-        }
-      },
-
-      // Only render a 7 day forecast
-      _shouldRenderDay: function(index){
-        if (index < 8) {
-          return true
         }
       }
 

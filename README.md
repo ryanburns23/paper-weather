@@ -4,7 +4,9 @@
 
 Material design weather element inspired by google weather
 
-No api key required
+- Card & list views
+- Themable
+- No api key required
 
 ## Usage
 <!--
@@ -20,6 +22,8 @@ No api key required
 -->
 ```html
 <paper-weather location="Santa Barbara, CA"></paper-weather>
+<!-- List View -->
+<paper-weather list unit="f" location="93105"></paper-weather>
 ```
 
 ## Rate limits without an API Key:
@@ -39,5 +43,4 @@ bower i ryanburns23/paper-weather --S
 
 - Weather data:
 [Yahoo Weather API](https://developer.yahoo.com/weather/)
-
 - Weather icons: [Naman Rastogi](https://material.uplabs.com/posts/google-now-weather-icons-freebie)
