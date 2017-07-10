@@ -21,9 +21,8 @@ Material design weather element inspired by google weather
 ```
 -->
 ```html
-<paper-weather location="Santa Barbara, CA"></paper-weather>
-<!-- List View -->
-<paper-weather list unit="f" location="93105"></paper-weather>
+<!-- List View Enabled -->
+<paper-weather list unit="f" location="Santa Barbara, CA"></paper-weather>
 ```
 
 ## Rate limits without an API Key:
