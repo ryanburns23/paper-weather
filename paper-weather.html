@@ -35,7 +35,6 @@ Material design weather element inspired by google weather
         background: white;
         max-width: 590px;
         margin: 0 auto;
-        @apply --shadow-elevation-2dp;
         color: var(--paper-weather-primary-text-color);
 
         --paper-weather-primary-text-color: rgba(0, 0, 0, .87);
@@ -44,7 +43,21 @@ Material design weather element inspired by google weather
       :host([loading]){
         height: var(--paper-weather-loading-height, 250px);
       }
-
+      :host([elevation="1"]) {
+        @apply --shadow-elevation-2dp;
+      }
+      :host([elevation="2"]) {
+        @apply --shadow-elevation-4dp;
+      }
+      :host([elevation="3"]) {
+        @apply --shadow-elevation-6dp;
+      }
+      :host([elevation="4"]) {
+        @apply --shadow-elevation-8dp;
+      }
+      :host([elevation="5"]) {
+        @apply --shadow-elevation-16dp;
+      }
       .content{
         margin-bottom: 20px;
         padding: 0 16px;
@@ -484,6 +497,14 @@ Material design weather element inspired by google weather
           notify: true,
           reflectToAttribute: true,
           value: true
+        },
+        /**
+         * The shadow depth of this element, from 0-5.
+         */
+        elevation: {
+          type: Number,
+          reflectToAttribute: true,
+          value: 1
         },
         /**
          * Icons
