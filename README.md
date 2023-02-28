@@ -2,6 +2,10 @@
 
 # \<paper-weather\>
 
+### ⚠️ The Yahoo weather API has been discontinued, see [lit-weather](https://github.com/ryanburns23/lit-weather) for a modern solution.
+
+---
+
 Material design weather element inspired by google weather
 
 - Card & list views
